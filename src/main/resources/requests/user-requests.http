@@ -1,0 +1,22 @@
+POST http://localhost:8080/api/auth/create
+Content-Type: application/json
+
+{
+  "username": "john_doesds",
+  "email": "johsds@example.com",
+  "password": "securePassword123+!",
+  "firstName": "John",
+  "lastName": "Doe",
+  "bio": "I love Kotlin!",
+  "profilePictureUrl": "https://example.com/profile.jpg"
+}
+
+###
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "johsds@example.com",
+  "password": "securePassword123+!"
+}
+

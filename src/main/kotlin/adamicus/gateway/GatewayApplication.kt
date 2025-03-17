@@ -21,10 +21,14 @@ class GatewayConfig {
     @Bean
     fun myRoutes(builder: RouteLocatorBuilder): RouteLocator {
         return builder.routes()
-            .route { p ->
+            .route("ping-route") { p ->
                 p.path("/ping")
                     .and().method(HttpMethod.GET)
-                    .uri("http://localhost:8081/")
+                    .uri("http://localhost:8081") // Ensure this points to a live service
+            }
+            .route("user-service") { p ->
+                p.path("/api/auth/**")
+                    .uri("http://localhost:8081") // Ensure correct target service
             }
             .build()
     }
