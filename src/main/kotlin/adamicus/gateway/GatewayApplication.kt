@@ -24,11 +24,11 @@ class GatewayConfig {
             .route("ping-route") { p ->
                 p.path("/ping")
                     .and().method(HttpMethod.GET)
-                    .uri("http://localhost:8081") // Ensure this points to a live service
+                    .uri("http://localhost:8081")
             }
             .route("user-service") { p ->
                 p.path("/api/auth/**")
-                    .uri("http://localhost:8081") // Ensure correct target service
+                    .uri("http://localhost:8081")
             }
             .build()
     }
