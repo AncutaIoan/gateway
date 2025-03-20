@@ -19,7 +19,7 @@ repositories {
 }
 
 extra["springCloudVersion"] = "2024.0.0"
-val jwtVersion = "0.11.5"
+val jwtVersion = "0.9.1"
 
 dependencies {
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
@@ -31,10 +31,8 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 
-	implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
-	implementation("io.jsonwebtoken:jjwt-impl:$jwtVersion")
-	implementation("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
-
+	implementation("javax.xml.bind:jaxb-api:2.3.1")
+	implementation("io.jsonwebtoken:jjwt:$jwtVersion")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")

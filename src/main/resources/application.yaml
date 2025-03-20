@@ -11,3 +11,12 @@ spring:
           predicates:
             - Path=/user-service/**
           uri: http://localhost:8081
+
+jws:
+  signing-key: 9e7d38b3-00ac-4357-9c24-4ddeb77c1ab8         # UUID-based signing key
+  encryption-key: 161397bf-8ee9-4bc8-a2bf-024a99a8238f      # UUID-based encryption key
+  encryption-salt: 5CD634A6759F88C4                         # UUID-based encryption salt
+  audience: 16cc4cc8-a865-4caa-8dba-cb9b7aacdbdd            # Intended audience
+  issuer: gateway                                           # JWT issuer (gateway)
+  allowed-clock-skew: PT60S                                 # 60 seconds clock skew
+  expire-after: P30D                                        # Tokens expire after 30 days

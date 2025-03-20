@@ -1,6 +1,7 @@
 package adamicus.gateway
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 class GatewayApplication
 
 fun main(args: Array<String>) {
