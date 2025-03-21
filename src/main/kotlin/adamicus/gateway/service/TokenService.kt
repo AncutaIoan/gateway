@@ -1,6 +1,6 @@
 package adamicus.gateway.service
 
-import adamicus.gateway.config.JwsConfig
+import adamicus.gateway.config.jws.JwsConfig
 import adamicus.gateway.model.UserPayload
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.jsonwebtoken.Jwts

@@ -1,7 +1,7 @@
 package adamicus.gateway.service
 
-import adamicus.gateway.config.JwsConfig
-import adamicus.gateway.config.ObjectMapperConfiguration
+import adamicus.gateway.config.jws.JwsConfig
+import adamicus.gateway.config.objectmapper.ObjectMapperConfiguration
 import adamicus.gateway.model.UserPayload
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

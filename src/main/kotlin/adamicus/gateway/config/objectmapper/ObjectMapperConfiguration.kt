@@ -1,4 +1,4 @@
-package adamicus.gateway.config
+package adamicus.gateway.config.objectmapper
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature

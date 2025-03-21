@@ -1,4 +1,4 @@
-package adamicus.gateway.config
+package adamicus.gateway.config.jws
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.time.Duration
