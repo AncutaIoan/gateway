@@ -1,5 +1,6 @@
 package adamicus.gateway
 
+import adamicus.gateway.filter.JwsValidationFilter
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
@@ -21,7 +22,7 @@ fun main(args: Array<String>) {
 class GatewayConfig {
 
     @Bean
-    fun myRoutes(builder: RouteLocatorBuilder): RouteLocator {
+    fun myRoutes(builder: RouteLocatorBuilder, jwsValidationFilter: JwsValidationFilter): RouteLocator {
         return builder.routes()
             .route("ping-route") { p ->
                 p.path("/ping")
@@ -29,8 +30,16 @@ class GatewayConfig {
                     .uri("http://localhost:8081")
             }
             .route("user-service") { p ->
-                p.path("/api/auth/**")
+                p.path("/api/auth/create", "/api/auth/authenticate")  // Routes without the filter
                     .uri("http://localhost:8081")
+            }
+            .route("user-service-test") { p ->
+                p.path("/api/auth/test-endpoint")
+                    .filters { f ->
+                        f.filter(jwsValidationFilter.apply(null))
+                    }
+                    .uri("http://localhost:8081")
+
             }
             .build()
     }

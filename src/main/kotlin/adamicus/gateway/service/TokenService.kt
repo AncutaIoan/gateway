@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate
+import org.springframework.http.server.reactive.ServerHttpRequest
 import java.util.Date
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
@@ -46,8 +47,20 @@ class TokenService(
         redisTemplate.opsForValue().set("${jwsConfig.prefix}$token", token, expiration.toEpochMilli())
             .thenReturn(token)
 
+    fun extractPayloadFromAuthHeader(request: ServerHttpRequest): Mono<String> {
+        return Mono.justOrEmpty(extractBearer(request)).flatMap { extractPayloadClaim(it) }
+    }
+
+    private fun extractBearer(request: ServerHttpRequest) =
+        request.headers.getFirst("Authorization")
+            ?.takeIf { it.startsWith("Bearer ") }
+            ?.removePrefix("Bearer ")
 
     fun toPayload(token: String): Mono<UserPayload> =
+        extractPayloadClaim(token)
+            .map { objectMapper.readValue(textEncryptor().decrypt(it), UserPayload::class.java) }
+
+    private fun extractPayloadClaim(token: String): Mono<String> =
         Jwts.parser()
             .setAllowedClockSkewSeconds(jwsConfig.allowedClockSkew.seconds)
             .requireAudience(jwsConfig.audience)
@@ -56,7 +69,6 @@ class TokenService(
             .parseClaimsJws(token)
             .toMono()
             .mapNotNull { it.body[PAYLOAD_CLAIM] as? String }
-            .map { objectMapper.readValue(textEncryptor().decrypt(it), UserPayload::class.java) }
 
 
     fun revokeToken(token: String): Mono<Long> {
