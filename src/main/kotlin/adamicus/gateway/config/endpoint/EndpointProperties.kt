@@ -1,8 +1,8 @@
-package adamicus.gateway.config
+package adamicus.gateway.config.endpoint
 
 import java.util.*
 
-interface EndpointConfig {
+interface EndpointProperties {
     val url: String
     val user: String?
     val password: String?

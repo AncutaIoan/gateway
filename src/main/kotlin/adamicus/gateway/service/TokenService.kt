@@ -9,15 +9,23 @@ import org.springframework.security.crypto.encrypt.Encryptors
 import org.springframework.security.crypto.encrypt.TextEncryptor
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.util.*
+
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate
+import java.util.Date
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Service
-class TokenService(private val objectMapper: ObjectMapper, private val jwsConfig: JwsConfig) {
+class TokenService(
+    private val objectMapper: ObjectMapper,
+    private val jwsConfig: JwsConfig,
+    private val redisTemplate: ReactiveStringRedisTemplate
+) {
     companion object {
         private const val PAYLOAD_CLAIM = "payload"
     }
 
-    fun generateToken(userPayload: UserPayload): String {
+    fun generateToken(userPayload: UserPayload): Mono<String> {
         val now = now()
         val expiration = now.plus(jwsConfig.expireAfter)
         val payload = objectMapper.writeValueAsString(userPayload)
@@ -30,23 +38,32 @@ class TokenService(private val objectMapper: ObjectMapper, private val jwsConfig
             .setExpiration(Date.from(expiration))
             .signWith(SignatureAlgorithm.HS256, jwsConfig.signingKey)
             .compact()
+            .toMono()
+            .flatMap { storeTokenInRedis(it, expiration) }
     }
 
-    fun toPayload(token: String): UserPayload? {
-        val encryptedPayload = Jwts.parser()
+    private fun storeTokenInRedis(token: String, expiration: Instant) =
+        redisTemplate.opsForValue().set("${jwsConfig.prefix}$token", token, expiration.toEpochMilli())
+            .thenReturn(token)
+
+
+    fun toPayload(token: String): Mono<UserPayload> =
+        Jwts.parser()
             .setAllowedClockSkewSeconds(jwsConfig.allowedClockSkew.seconds)
             .requireAudience(jwsConfig.audience)
             .requireIssuer(jwsConfig.issuer)
             .setSigningKey(jwsConfig.signingKey)
             .parseClaimsJws(token)
-            .body[PAYLOAD_CLAIM] as? String
+            .toMono()
+            .mapNotNull { it.body[PAYLOAD_CLAIM] as? String }
+            .map { objectMapper.readValue(textEncryptor().decrypt(it), UserPayload::class.java) }
 
-        val payload  = objectMapper.readValue(textEncryptor().decrypt(encryptedPayload), UserPayload::class.java)
 
-        return payload
+    fun revokeToken(token: String): Mono<Long> {
+        return redisTemplate.delete(jwsConfig.prefix + token)
     }
 
-    private fun textEncryptor(): TextEncryptor = Encryptors.text(jwsConfig.encryptionKey, jwsConfig.encryptionSalt)
-
     internal fun now(): Instant = Instant.now()
+
+    private fun textEncryptor(): TextEncryptor = Encryptors.text(jwsConfig.encryptionKey, jwsConfig.encryptionSalt)
 }

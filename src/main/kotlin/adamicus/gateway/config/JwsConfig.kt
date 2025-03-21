@@ -11,5 +11,6 @@ data class JwsConfig(
     val audience: String,
     val issuer: String,
     val allowedClockSkew: Duration,
-    val expireAfter: Duration
+    val expireAfter: Duration,
+    val prefix: String
 )

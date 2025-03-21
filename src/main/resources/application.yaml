@@ -20,3 +20,4 @@ jws:
   issuer: gateway                                           # JWT issuer (gateway)
   allowed-clock-skew: PT60S                                 # 60 seconds clock skew
   expire-after: P30D                                        # Tokens expire after 30 days
+  prefix: cool-cache-for-tokens                             # Cache prefix
