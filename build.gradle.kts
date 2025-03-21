@@ -33,6 +33,7 @@ dependencies {
 
 	implementation("javax.xml.bind:jaxb-api:2.3.1")
 	implementation("io.jsonwebtoken:jjwt:$jwtVersion")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
