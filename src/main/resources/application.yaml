@@ -11,6 +11,28 @@ spring:
       discovery:
         locator:
           enabled: true
+      routes:
+        # Ping route (no filter needed)
+        - id: ping-route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/ping
+            - Method=GET
+
+        # User service routes without filters
+        - id: user-service-create-authenticate
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/create,/api/auth/authenticate
+
+        # User service test route with JWS validation filter
+        - id: user-service-test
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/auth/test-endpoint
+            - Method=GET
+          filters:
+            - name: JwsValidationFilter
 
 logging:
   level:
