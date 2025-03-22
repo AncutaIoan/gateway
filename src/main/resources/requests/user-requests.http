@@ -1,9 +1,10 @@
+### Creates an user in user-service
 POST http://localhost:8080/api/auth/create
 Content-Type: application/json
 
 {
-  "username": "john_doesdsss",
-  "email": "johsdssss@example.com",
+  "username": "john_doesdsssdsds",
+  "email": "johsdssssds@example.com",
   "password": "securePassword123+!",
   "firstName": "John",
   "lastName": "Doe",
@@ -11,8 +12,8 @@ Content-Type: application/json
   "profilePictureUrl": "https://example.com/profile.jpg"
 }
 
-###
-POST http://localhost:8080/api/auth/authenticate
+### Login from gateway, a JWS is created for FE <-> BE
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
@@ -20,7 +21,6 @@ Content-Type: application/json
   "password": "securePassword123+!"
 }
 
-###
-GET http://localhost:8080/api/auth/test-endpoint
+### Gets user info based on Auth
+GET http://localhost:8080/user/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmNjNGNjOC1hODY1LTRjYWEtOGRiYS1jYjliN2FhY2RiZGQiLCJpc3MiOiJnYXRld2F5IiwiaWF0IjoxNzQyNjYxNjMxLCJwYXlsb2FkIjoiYWZjYTFmZDVhOTc3Yjc4MGUzMWRlOTFhMzJjMTlkMDE1OGQ2MGE2OWJhYWI2MTQxM2U2NTZhZTM5NTRiYmE0ZSIsImV4cCI6MTc0NTI1MzYzMX0.Gbd8F1sntxCDg2armacvvjrQYSqqRz-j6UiSys62-yM
-X-JWS-Payload: asdddasd

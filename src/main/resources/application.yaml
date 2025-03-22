@@ -19,18 +19,17 @@ spring:
             - Path=/ping
             - Method=GET
 
-        # User service routes without filters
+        # User service routes without filters (create & authenticate)
         - id: user-service-create-authenticate
           uri: http://localhost:8081
           predicates:
-            - Path=/api/auth/create,/api/auth/authenticate
+            - Path=/api/auth/create
 
-        # User service test route with JWS validation filter
-        - id: user-service-test
+        # Secure /api/auth endpoints (except create & authenticate) and all /user endpoints
+        - id: user-service-secured
           uri: http://localhost:8081
           predicates:
-            - Path=/api/auth/test-endpoint
-            - Method=GET
+            - Path=/user/**
           filters:
             - name: JwsValidationFilter
 
