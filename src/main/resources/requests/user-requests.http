@@ -2,8 +2,8 @@ POST http://localhost:8080/api/auth/create
 Content-Type: application/json
 
 {
-  "username": "john_doesds",
-  "email": "johsds@example.com",
+  "username": "john_doesdsss",
+  "email": "johsdssss@example.com",
   "password": "securePassword123+!",
   "firstName": "John",
   "lastName": "Doe",
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/api/auth/login
+POST http://localhost:8080/api/auth/authenticate
 Content-Type: application/json
 
 {
@@ -20,3 +20,8 @@ Content-Type: application/json
   "password": "securePassword123+!"
 }
 
+
+###
+GET http://localhost:8080/api/auth/test-endpoint
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNmNjNGNjOC1hODY1LTRjYWEtOGRiYS1jYjliN2FhY2RiZGQiLCJpc3MiOiJnYXRld2F5IiwiaWF0IjoxNzQyNjM1NTMzLCJwYXlsb2FkIjoiMWU0MTk1Mjg2MjMwNDk2MmRmMjliZDRhZGNiNzJkMWUxZWY2ZDAwMjA3MmQxM2M3NzVjYjBjMWMwYzRmZDAxMSIsImV4cCI6MTc0NTIyNzUzM30.UONVAUmU72Hr7_uY7Q_TtJX-a0_2ODuY1E9yIDAnj3Y
+X-JWS-Payload: asdddasd

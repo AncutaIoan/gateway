@@ -4,14 +4,31 @@ server:
 spring:
   application:
     name: gateway-service
+  main:
+    web-application-type: reactive
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          predicates:
-            - Path=/user-service/**
-          uri: http://localhost:8081
+      discovery:
+        locator:
+          enabled: true
 
+logging:
+  level:
+    org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.web.reactive: TRACE
+    io.netty: TRACE
+
+api:
+  user:
+    url: http://localhost:8081/api/auth
+    user: d
+    password: d
+    poolMaxSize: 4
+    connectionTimeoutSec: 4
+    readTimeoutSec: 4
+    idleTimeoutSec: 4
+    authMode: none
 jws:
   signing-key: 9e7d38b3-00ac-4357-9c24-4ddeb77c1ab8         # UUID-based signing key
   encryption-key: 161397bf-8ee9-4bc8-a2bf-024a99a8238f      # UUID-based encryption key

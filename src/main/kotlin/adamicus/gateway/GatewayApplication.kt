@@ -23,24 +23,27 @@ class GatewayConfig {
 
     @Bean
     fun myRoutes(builder: RouteLocatorBuilder, jwsValidationFilter: JwsValidationFilter): RouteLocator {
+        val filter = jwsValidationFilter.apply(JwsValidationFilter.Config())
         return builder.routes()
+            // Define ping route first (no filter needed here)
             .route("ping-route") { p ->
                 p.path("/ping")
                     .and().method(HttpMethod.GET)
                     .uri("http://localhost:8081")
             }
+            // User service routes without filters
             .route("user-service") { p ->
-                p.path("/api/auth/create", "/api/auth/authenticate")  // Routes without the filter
+                p.path("/api/auth/create", "/api/auth/authenticate")  // No filter
                     .uri("http://localhost:8081")
             }
-            .route("user-service-test") { p ->
+            // User service test route with JWS validation filter
+            .route("user-service") { p ->
                 p.path("/api/auth/test-endpoint")
-                    .filters { f ->
-                        f.filter(jwsValidationFilter.apply(null))
-                    }
+                    .and().method(HttpMethod.GET)
+                    .filters { f -> f.filter(filter) }
                     .uri("http://localhost:8081")
-
             }
             .build()
     }
+
 }

@@ -44,11 +44,12 @@ class TokenService(
     }
 
     private fun storeTokenInRedis(token: String, expiration: Instant) =
-        redisTemplate.opsForValue().set("${jwsConfig.prefix}$token", token, expiration.toEpochMilli())
-            .thenReturn(token)
+        token.toMono()
+//        redisTemplate.opsForValue().set("${jwsConfig.prefix}$token", token, expiration.toEpochMilli())
+//            .thenReturn(token)
 
-    fun extractPayloadFromAuthHeader(request: ServerHttpRequest): Mono<String> {
-        return Mono.justOrEmpty(extractBearer(request)).flatMap { extractPayloadClaim(it) }
+    fun extractPayloadFromAuthHeader(request: ServerHttpRequest): Mono<UserPayload> {
+        return Mono.justOrEmpty(extractBearer(request)).flatMap { toPayload(it) }
     }
 
     private fun extractBearer(request: ServerHttpRequest) =
@@ -67,8 +68,8 @@ class TokenService(
             .requireIssuer(jwsConfig.issuer)
             .setSigningKey(jwsConfig.signingKey)
             .parseClaimsJws(token)
+            .let { it.body[PAYLOAD_CLAIM] as? String }
             .toMono()
-            .mapNotNull { it.body[PAYLOAD_CLAIM] as? String }
 
 
     fun revokeToken(token: String): Mono<Long> {
